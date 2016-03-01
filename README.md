@@ -5,10 +5,10 @@ A PowerShell script for converting other PowerShell scripts to [USB Rubber Ducky
 
 **Back up your script before running this**
 
-1. Cleans up your PowerShell code using [`Edit-DTWCleanScript](http://www.dtwconsulting.com/PS/Module_PrettyPrinterV1.htm)
+1. Cleans up your PowerShell code using [`Edit-DTWCleanScript'](http://www.dtwconsulting.com/PS/Module_PrettyPrinterV1.htm)
 2. Creates a seperate, minified version of your script using [`minJS.psm1`](https://minifyps.codeplex.com/) (which can minify JavaScript and PowerShell)
 3. Builds a [Duckyscript](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Duckyscript) that will quickly and discreetly (as possible) write your minified PowerShell script, save it, execute it, and delete it
-4. Use [`encoder.jar`](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder) to encode the Duckyscript to a USB Rubber Ducky payload named `inject.bin`
+4. Uses [`encoder.jar`](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder) to encode the Duckyscript to a USB Rubber Ducky payload named `inject.bin`
 
 To use your new payload, simply copy `inject.bin` to a microSD card, and insert the card in the USB Rubber Ducky.
 
