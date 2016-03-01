@@ -3,7 +3,7 @@ A PowerShell script for converting other PowerShell scripts to [USB Rubber Ducky
 
 ## What this does
 
-**Back up your script before running this**
+**Backup your script before running this**
 
 1. Cleans up your PowerShell code using [`Edit-DTWCleanScript`](http://www.dtwconsulting.com/PS/Module_PrettyPrinterV1.htm)
 2. Creates a seperate, minified version of your script using [`minJS.psm1`](https://minifyps.codeplex.com/) (which can minify JavaScript and PowerShell)
