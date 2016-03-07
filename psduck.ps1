@@ -64,7 +64,7 @@ ENTER
 $DownArrows = GetDownArrows 61
 $DownArrows = $DownArrows.TrimEnd()
 
-$HideWindowScript = [String]::Format($HideWindowScript, $DownArrows)
+$HideWindowScript = [string]::Format($HideWindowScript,$DownArrows)
 
 [string]$Path = Resolve-Path $Path
 $RandomFileName = [System.IO.Path]::GetRandomFileName().Split(‘.’)[0]
@@ -85,7 +85,7 @@ ENTER
 {0}
 "@
 
-$PreScript = [String]::Format($PreScript, $HideWindowScript)
+$PreScript = [string]::Format($PreScript,$HideWindowScript)
 
 $PostScript = @"
 
@@ -108,7 +108,7 @@ DELAY 750
 STRING powershell.exe Remove-Item %TEMP%\{0}.ps1
 ENTER
 "@
-$PostScript = [string]::Format($PostScript, $RandomFileName)
+$PostScript = [string]::Format($PostScript,$RandomFileName)
 $PreScript | Out-File -Encoding ascii $TxtPath
 $PsLines = Get-Content $Path
 foreach ($line in $PsLines) {
