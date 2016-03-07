@@ -19,7 +19,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Author: Sean Whalen (@SeanTheGeek)
-Version: 1.0.1
+Version: 1.1.0
 Required Dependencies: Java runtime
 Optional Dependencies: None
     
@@ -41,28 +41,16 @@ $ScriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
 Import-Module (Join-Path $ScriptPath DTW.PS.FileSystem.Encoding.psm1)
 Import-Module (Join-Path $ScriptPath DTW.PS.PrettyPrinterV1.psm1)
-Import-Module (Join-Path $ScriptPath minJS.psm1)
 
 
 function GetDownArrows ([int]$Number) {
 
-  return "DOWNARROW`n" * $Number
+  return "DOWNARROW`r`n" * $Number
 }
 
-[string]$Path = Resolve-Path $Path
-$RandomFileName = [System.IO.Path]::GetRandomFileName().Split(‘.’)[0]
-$TxtPath = $Path + ".txt"
 
-Edit-DTWCleanScript $Path
-$content = [IO.File]::ReadAllText($Path)
-$MinContent = minify $content -inputDataType "ps1"
-$MinPath = $Path.Split(".")[0..-1][0] + ".min.ps1"
-$MinContent | Out-File $MinPath -Encoding ascii
 
-$DownArrows = GetDownArrows 61
-$DownArrows = $DownArrows.Trim()
-
-$HideWindow = @"
+$HideWindowScript = @"
 DELAY 750
 ALT SPACE
 DELAY 750
@@ -73,11 +61,22 @@ DELAY 750
 ENTER
 "@
 
-$HideWindow = [string]::Format($DownArrows)
+$DownArrows = GetDownArrows 61
+$DownArrows = $DownArrows.TrimEnd()
+
+$HideWindowScript = [String]::Format($HideWindowScript, $DownArrows)
+
+[string]$Path = Resolve-Path $Path
+$RandomFileName = [System.IO.Path]::GetRandomFileName().Split(‘.’)[0]
+$TxtPath = $Path + ".txt"
+
+Edit-DTWCleanScript $Path
+$content = [IO.File]::ReadAllText($Path)
+
 
 $PreScript = @"
 DELAY 750
-GUI
+CONTROL ESCAPE
 DELAY 750
 STRING notepad.exe
 ENTER
@@ -86,7 +85,7 @@ ENTER
 {0}
 "@
 
-$PreScript = [string]::Format($HideWindow)
+$PreScript = [String]::Format($PreScript, $HideWindowScript)
 
 $PostScript = @"
 
@@ -99,21 +98,21 @@ ENTER
 DELAY 750
 ALT F4
 DELAY 750
-GUI
+CONTROL ESCAPE
 DELAY 750
-STRING powershell.exe -Bypass -WindowStyle hidden -File %TEMP%\{0}.ps1
+STRING powershell.exe --ExecutionPolicy Bypass -WindowStyle Hidden -File %TEMP%\{0}.ps1
 ENTER
 DELAY 750
-GUI
+CONTROL ESCAPE
 DELAY 750
-STRING powershell.exe Remove-Item %TEMP%\{filename}.ps1
+STRING powershell.exe Remove-Item %TEMP%\{0}.ps1
 ENTER
 "@
-$PostScript = [string]::Format($RandomFileName)
+$PostScript = [string]::Format($PostScript, $RandomFileName)
 $PreScript | Out-File -Encoding ascii $TxtPath
-$PsLines = Get-Content $MinPath
+$PsLines = Get-Content $Path
 foreach ($line in $PsLines) {
-  [string]::Format("STRING {0}`nENTER",$line.Trim()) | Out-File -Encoding ascii $TxtPath
+  [string]::Format("STRING {0}`r`nENTER",$line.Trim()) | Out-File -Append -Encoding ascii $TxtPath
 }
-$PostScript | Out-File -Encoding ascii $TxtPath
+$PostScript | Out-File -Append -Encoding ascii $TxtPath
 java -jar (Join-Path $ScriptPath encoder.jar) -i $TxtPath
